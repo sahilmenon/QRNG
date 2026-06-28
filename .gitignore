@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# IBM Quantum credentials — never commit
+.qiskit/
+*.token
+ibm_token.txt
+.env
+
+# Results (large/regenerable). Keep the dir, ignore bulky artifacts.
+results/*.npy
+results/*.png
+results/*.json
+!results/.gitkeep

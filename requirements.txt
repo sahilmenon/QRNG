@@ -1,0 +1,12 @@
+# Quantum Random Number Generator — dependencies
+# NOTE: requires Python 3.13 (qiskit-aer has no wheels for 3.14 as of this writing).
+
+qiskit>=2.4,<3
+qiskit-aer>=0.17
+qiskit-ibm-runtime>=0.30
+numpy>=1.26
+scipy>=1.11
+matplotlib>=3.8
+streamlit>=1.30
+nistrng>=1.2.3          # full 15-test SP 800-22 battery (run via qrng/nist_full.py)
+cryptography>=42        # AES-256-GCM demo (qrng/crypto_demo.py)
