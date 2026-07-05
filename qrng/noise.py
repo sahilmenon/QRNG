@@ -11,14 +11,18 @@ from __future__ import annotations
 
 import numpy as np
 from qiskit import QuantumCircuit
-from qiskit_aer.primitives import SamplerV2
-from qiskit_aer.noise import NoiseModel, ReadoutError, thermal_relaxation_error
 
 from .analysis import bias_report
 
+# NOTE: qiskit-aer is imported lazily inside each function, not at module top.
+# Its C++ extension segfaults in some sandboxed hosts (e.g. Streamlit Community
+# Cloud), so merely *importing* this module must not load it. Callers that use
+# noise models still need qiskit-aer installed and a host that can run it.
 
-def readout_noise_model(p0_given1: float = 0.03, p1_given0: float = 0.02) -> NoiseModel:
+
+def readout_noise_model(p0_given1: float = 0.03, p1_given0: float = 0.02) -> "NoiseModel":
     """Asymmetric readout error only -- the dominant bias source on real QPUs."""
+    from qiskit_aer.noise import NoiseModel, ReadoutError
     nm = NoiseModel()
     # rows: P(read | prepared);  [[P(0|0),P(1|0)],[P(0|1),P(1|1)]]
     nm.add_all_qubit_readout_error(
@@ -32,12 +36,13 @@ def thermal_noise_model(
     t2_us: float = 80.0,
     gate_ns: float = 100.0,
     readout: bool = True,
-) -> NoiseModel:
+) -> "NoiseModel":
     """Thermal-relaxation error on idle/single-qubit gates (+ optional readout).
 
     Times in microseconds; gate duration in nanoseconds. Defaults are in the
     ballpark of current superconducting hardware.
     """
+    from qiskit_aer.noise import NoiseModel, ReadoutError, thermal_relaxation_error
     nm = NoiseModel()
     t1, t2, gate = t1_us * 1e3, t2_us * 1e3, gate_ns  # all -> ns
     relax = thermal_relaxation_error(t1, t2, gate)
@@ -47,7 +52,8 @@ def thermal_noise_model(
     return nm
 
 
-def _sampler(noise_model: NoiseModel | None, seed: int | None) -> SamplerV2:
+def _sampler(noise_model, seed: int | None):
+    from qiskit_aer.primitives import SamplerV2
     opts = {"backend_options": {"noise_model": noise_model}} if noise_model else {}
     return SamplerV2(seed=seed, options=opts)
 

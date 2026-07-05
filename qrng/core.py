@@ -5,13 +5,20 @@ The result-extraction path here is for Qiskit 2.x / SamplerV2 and was verified
 empirically (not coded from memory): a measured circuit's data lives under the
 classical-register name ``meas`` (the name ``measure_all()`` assigns), and
 ``BitArray.to_bool_array()`` yields a ``(shots, n_qubits)`` boolean array.
+
+The ideal simulator here is Qiskit's built-in ``StatevectorSampler`` (pure
+Python/NumPy, no compiled backend). This keeps the core path free of the
+``qiskit-aer`` C++ extension, which segfaults in some sandboxed hosts (e.g.
+Streamlit Community Cloud). Aer is still used for *noise* modelling in
+``qrng.noise``. For an all-Hadamard circuit the two give identical Born-rule
+statistics.
 """
 
 from __future__ import annotations
 
 import numpy as np
 from qiskit import QuantumCircuit
-from qiskit_aer.primitives import SamplerV2
+from qiskit.primitives import StatevectorSampler
 
 
 def build_qrng_circuit(n_qubits: int) -> QuantumCircuit:
@@ -34,7 +41,7 @@ def sample_bitmatrix(
     :func:`generate_quantum_bits` when you just want a bit stream.
     """
     qc = build_qrng_circuit(n_qubits)
-    sampler = SamplerV2(seed=seed)
+    sampler = StatevectorSampler(seed=seed)
     result = sampler.run([qc], shots=n_shots).result()
     bit_array = result[0].data["meas"]          # classical register named by measure_all()
     return bit_array.to_bool_array().astype(np.uint8)

@@ -1,7 +1,10 @@
 """Streamlit demo for the Quantum Random Number Generator.
 
-Runs entirely on the local Aer simulator, so it deploys to a free public host
-(Streamlit Community Cloud / Hugging Face Spaces) with no IBM token or secrets.
+Runs entirely on Qiskit's built-in StatevectorSampler (pure Python, no compiled
+backend), so it deploys to a free public host (Streamlit Community Cloud /
+Hugging Face Spaces) with no IBM token or secrets. Deliberately avoids qiskit-aer,
+whose C++ extension segfaults in some sandboxed hosts; noise modelling (which
+needs Aer) stays in the local pipeline, not this demo.
 
 Local:   streamlit run app.py
 Deploy:  push to GitHub -> share.streamlit.io -> pick this repo -> app.py
@@ -12,9 +15,7 @@ from __future__ import annotations
 import numpy as np
 import streamlit as st
 
-from qrng import (
-    analysis, classical, core, crypto_demo, entropy_800_90b, mitigation, nist, noise,
-)
+from qrng import analysis, classical, core, crypto_demo, entropy_800_90b, nist
 
 st.set_page_config(page_title="Quantum RNG", page_icon="🎲", layout="wide")
 
@@ -22,14 +23,13 @@ st.title("🎲 Quantum Random Number Generator")
 st.caption(
     "Hadamard gates collapse qubit superpositions into provably random bits, "
     "then we hold them to the same statistical scrutiny as classical RNGs. "
-    "Runs on Qiskit's Aer simulator (no IBM token needed for this demo)."
+    "Runs on Qiskit's StatevectorSampler (no IBM token needed for this demo)."
 )
 
 with st.sidebar:
     st.header("Parameters")
     n_qubits = st.slider("Qubits", 2, 16, 8)
     n_shots = st.select_slider("Shots", [1000, 2500, 5000, 12500, 25000], value=12500)
-    apply_noise = st.checkbox("Hardware-like noise model", value=False)
     seed = st.number_input("Seed", value=2025, step=1)
     go = st.button("Generate quantum bits", type="primary")
     st.markdown("---")
@@ -56,19 +56,11 @@ def summarise(name: str, bits: np.ndarray) -> dict:
 
 if go:
     with st.spinner("Sampling the quantum circuit..."):
-        if apply_noise:
-            nm = noise.thermal_noise_model()
-            q_matrix = noise.sample_with_noise(n_qubits, n_shots, nm, seed=int(seed))
-            label = "Quantum (noisy sim)"
-        else:
-            q_matrix = core.sample_bitmatrix(n_qubits, n_shots, seed=int(seed))
-            label = "Quantum (ideal sim)"
+        q_matrix = core.sample_bitmatrix(n_qubits, n_shots, seed=int(seed))
+        label = "Quantum (ideal sim)"
         q_bits = q_matrix.reshape(-1)
 
     sources = [summarise(label, q_bits)]
-    if apply_noise:
-        sources.append(summarise(f"{label} + Von Neumann",
-                                 mitigation.von_neumann_extract(q_bits)))
     sources.append(summarise("MT19937 (PRNG)",
                              classical.mt19937_bits(q_bits.size, seed=int(seed))))
     sources.append(summarise("secrets (CSPRNG)", classical.secrets_bits(q_bits.size)))
