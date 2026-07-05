@@ -90,7 +90,7 @@ if go:
         width="stretch", hide_index=True,
     )
     st.caption("NIST column is the 8-test from-scratch subset (fast). The full "
-               "15-test battery is too slow to run live — see `results/full_nist.json`.")
+               "15-test battery is too slow to run live; see `results/full_nist.json`.")
 
     st.subheader("NIST SP 800-22 detail (quantum source)")
     st.dataframe(
@@ -122,13 +122,13 @@ if go:
         actual = rng.getrandbits(32)
         st.write(
             "A good PRNG (MT19937) passes the whole NIST battery and scores ~1.0 "
-            "min-entropy — output statistics cannot tell it from true randomness. "
+            "min-entropy; output statistics cannot tell it from true randomness. "
             "The real separation is **predictability given internal state**:"
         )
         st.code(
             f"From 624 consecutive MT19937 outputs, predicted next output = {predicted}\n"
             f"Actual next output                                = {actual}\n"
-            f"-> {'EXACT MATCH — PRNG fully predictable' if predicted == actual else 'mismatch'}",
+            f"-> {'EXACT MATCH: PRNG fully predictable' if predicted == actual else 'mismatch'}",
         )
         st.write("The quantum source has no internal state to recover.")
 else:

@@ -6,7 +6,7 @@ __pycache__/
 .venv/
 venv/
 
-# IBM Quantum credentials — never commit
+# IBM Quantum credentials - never commit
 .qiskit/
 *.token
 ibm_token.txt

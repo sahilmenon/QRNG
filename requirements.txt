@@ -1,4 +1,4 @@
-# Quantum Random Number Generator — dependencies
+# Quantum Random Number Generator - dependencies
 # NOTE: requires Python 3.13 (qiskit-aer has no wheels for 3.14 as of this writing).
 
 qiskit>=2.4,<3

@@ -1,7 +1,7 @@
-# QRNG — Quantum Random Number Generator
+# QRNG - Quantum Random Number Generator
 
 Generate provably random bits by measuring qubits in equal superposition, then
-hold those bits to the same statistical scrutiny as classical RNGs — on a local
+hold those bits to the same statistical scrutiny as classical RNGs, on a local
 simulator now, on real IBM Quantum hardware when a token is supplied.
 
 ## Why quantum randomness is different
@@ -22,7 +22,7 @@ One shot of an `n`-qubit all-Hadamard circuit yields `n` random bits.
 ## An honest note on what the tests can and cannot show
 
 A well-designed PRNG (MT19937) passes the **entire NIST SP 800-22 battery** and
-scores ≈1.0 bit/bit on output **min-entropy** — the same as the quantum source.
+scores ≈1.0 bit/bit on output **min-entropy**, the same as the quantum source.
 Output-based statistics are *necessary but not sufficient*; they cannot see a
 seed. The real PRNG/TRNG separation is **predictability given internal state**:
 MT19937's full state is recoverable from 624 consecutive outputs, after which all
@@ -49,7 +49,7 @@ distinction rather than claiming a min-entropy gap that does not exist.
 
 ## Two bugs found and fixed in the `nistrng` library
 
-Treating `nistrng` as a black-box "15/15" oracle would have been wrong — it has
+Treating `nistrng` as a black-box "15/15" oracle would have been wrong; it has
 two bugs that make *good* random data fail, both verified and worked around in
 `qrng/nist_full.py`:
 
@@ -89,7 +89,7 @@ python scripts/full_nist_run.py                # full 15-test battery on 1M bits
 1. Create a free account at <https://quantum.cloud.ibm.com>, then copy your
    **API key** and your **instance CRN** from the dashboard.
 2. Save credentials once (kept in `~/.qiskit`, never committed). The legacy
-   `channel="ibm_quantum"` was removed — use `ibm_quantum_platform`:
+   `channel="ibm_quantum"` was removed, so use `ibm_quantum_platform`:
    ```python
    from qiskit_ibm_runtime import QiskitRuntimeService
    QiskitRuntimeService.save_account(
@@ -103,7 +103,7 @@ free-tier limits drift, so nothing is hardcoded.
 
 ## Live demo (shareable link)
 
-`app.py` is a Streamlit front-end that runs the whole pipeline on the simulator —
+`app.py` is a Streamlit front-end that runs the whole pipeline on the simulator,
 no token or secrets, so it deploys to a free public URL:
 
 ```powershell
@@ -111,8 +111,8 @@ streamlit run app.py            # local
 ```
 
 To publish: push this repo to GitHub, then on
-[share.streamlit.io](https://share.streamlit.io) pick the repo and `app.py` —
-you get a public `https://<app>.streamlit.app` link. `requirements.txt` and
+[share.streamlit.io](https://share.streamlit.io) pick the repo and `app.py` to get
+a public `https://<app>.streamlit.app` link. `requirements.txt` and
 `runtime.txt` (Python 3.13) are already set up for the build. Hugging Face Spaces
 (Streamlit SDK) works the same way.
 
