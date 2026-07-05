@@ -73,8 +73,13 @@ Requires **Python 3.13** (qiskit-aer has no 3.14 wheels yet).
 ```powershell
 py -3.13 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -r requirements-dev.txt   # full local pipeline
 ```
+
+`requirements.txt` is the lean set the Streamlit demo deploys with (no qiskit-aer,
+which segfaults in Streamlit Cloud's sandbox — the app uses Qiskit's pure-Python
+`StatevectorSampler`). `requirements-dev.txt` adds qiskit-aer, qiskit-ibm-runtime,
+nistrng, matplotlib and pytest for the noise/hardware/full-battery pipeline.
 
 ## Run (simulator)
 

@@ -1,0 +1,12 @@
+# Full local pipeline: everything in requirements.txt plus the heavier pieces the
+# Streamlit demo deliberately omits. Requires Python 3.13 (qiskit-aer wheels).
+#
+#   pip install -r requirements-dev.txt
+
+-r requirements.txt
+
+qiskit-aer>=0.17           # noise models + depth sweep (qrng/noise.py)
+qiskit-ibm-runtime>=0.30   # real IBM hardware submission (qrng/hardware.py)
+nistrng>=1.2.3             # full 15-test SP 800-22 battery (qrng/nist_full.py)
+matplotlib>=3.8            # pipeline plots (scripts/run_pipeline.py)
+pytest>=8                  # test suite

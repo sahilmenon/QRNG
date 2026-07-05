@@ -1,12 +1,16 @@
-# Quantum Random Number Generator - dependencies
-# NOTE: requires Python 3.13 (qiskit-aer has no wheels for 3.14 as of this writing).
+# Quantum Random Number Generator - runtime deps for the Streamlit demo (app.py).
+# Kept minimal so the cloud build is lean and does NOT install qiskit-aer, whose
+# C++ extension segfaults in Streamlit Community Cloud's sandbox. The app uses
+# Qiskit's pure-Python StatevectorSampler instead.
+#
+# For the full local pipeline (noise models, full NIST battery, IBM hardware,
+# plots, tests) install requirements-dev.txt instead.
+#
+# NOTE: requires Python 3.13 locally (qiskit-aer has no 3.14 wheels); the cloud
+# app itself works on any Python with qiskit wheels.
 
+streamlit>=1.30
 qiskit>=2.4,<3
-qiskit-aer>=0.17
-qiskit-ibm-runtime>=0.30
 numpy>=1.26
 scipy>=1.11
-matplotlib>=3.8
-streamlit>=1.30
-nistrng>=1.2.3          # full 15-test SP 800-22 battery (run via qrng/nist_full.py)
-cryptography>=42        # AES-256-GCM demo (qrng/crypto_demo.py)
+cryptography>=42

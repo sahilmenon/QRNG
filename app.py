@@ -12,6 +12,12 @@ Deploy:  push to GitHub -> share.streamlit.io -> pick this repo -> app.py
 
 from __future__ import annotations
 
+# Dump a native (C-level) traceback if any compiled extension segfaults, so the
+# offending shared library shows up in the Streamlit Cloud logs instead of a bare
+# "Segmentation fault". Harmless in normal operation.
+import faulthandler
+faulthandler.enable()
+
 import numpy as np
 import streamlit as st
 
