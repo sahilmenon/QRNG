@@ -101,21 +101,6 @@ python scripts/full_nist_run.py                # full 15-test battery on 1M bits
 The backend is chosen at submission time via `least_busy(...)`; backend names and
 free-tier limits drift, so nothing is hardcoded.
 
-## Live demo (shareable link)
-
-`app.py` is a Streamlit front-end that runs the whole pipeline on the simulator,
-no token or secrets, so it deploys to a free public URL:
-
-```powershell
-streamlit run app.py            # local
-```
-
-To publish: push this repo to GitHub, then on
-[share.streamlit.io](https://share.streamlit.io) pick the repo and `app.py` to get
-a public `https://<app>.streamlit.app` link. `requirements.txt` and
-`runtime.txt` (Python 3.13) are already set up for the build. Hugging Face Spaces
-(Streamlit SDK) works the same way.
-
 ## Status
 
 - [x] Project scaffold, Python 3.13 venv, dependencies
