@@ -1,5 +1,5 @@
-"""Core QRNG: build the all-Hadamard circuit, sample it on the local Aer
-simulator, and extract a flat bit array.
+"""Core QRNG: build the all-Hadamard circuit, sample it on Qiskit's built-in
+statevector simulator, and extract a flat bit array.
 
 The result-extraction path here is for Qiskit 2.x / SamplerV2 and was verified
 empirically (not coded from memory): a measured circuit's data lives under the
