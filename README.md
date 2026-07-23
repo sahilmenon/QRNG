@@ -120,3 +120,15 @@ free-tier limits drift, so nothing is hardcoded.
 
 `python scripts/run_pipeline.py --noise` produces `results/summary.json`,
 `results/nist_pass_rates.png`, and `results/decoherence_sweep.png`.
+
+---
+
+## What I'd do next
+
+**IBM Quantum hardware run** — the submission code (`qrng/hardware.py`) is complete and tested against the simulator, but I haven't had an active IBM Quantum token. The first priority is running the full pipeline on real hardware and publishing the measured p-values next to the simulator results; the interesting question is how much decoherence closes the gap between theory and practice.
+
+**Toeplitz extractor post-processing** — raw quantum measurements from real hardware have small per-qubit biases (thermal noise, calibration drift). A Toeplitz randomness extractor would distil the raw bits to a shorter, provably uniform output, which is what NIST SP 800-90B recommends before deriving keys. The 800-90B min-entropy estimates already tell us the extractable rate; wiring a proper extractor would close the loop.
+
+**OS entropy source integration** — right now the output is written to files. Packaging it as a small daemon that feeds `/dev/random` (Linux) or the Windows BCrypt pool would make the QRNG an actual system-level entropy source rather than a standalone CLI, which is the "does this matter in practice?" validation.
+
+**Expanded noise study** — the current noise model uses Qiskit's `depolarizing_error` and thermal relaxation, which are generic. Pulling the real calibration data for a specific IBM backend (via `backend.properties()`) and running the circuit under those gate error rates would give a much more accurate hardware prediction before committing a real token to a long job.
